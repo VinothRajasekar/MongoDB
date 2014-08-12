@@ -7,7 +7,9 @@ The Dataset
 The  dataset put together by Valeri Karpov, a software engineer and data geek/blogger.  (http://thecodebarbarian.wordpress.com/about/ ) He and a friend produced the NBA dataset by scraping data from basketball-reference.com and putting it into a MongoDB friendly format. Details of how they did so, and a basic outline of the data contained in the dataset can be found on his blog entry at:
 http://thecodebarbarian.wordpress.com/2014/02/14/crunching-30-years-of-nba-data-with-mongodb-aggregation/
 
-Questions:
+------------------------
+Questions of MongoDB NBA:
+-------------------------
 
 Question group #1:
 Karpov’s blog post has a sample query that calculates how likely a team that has more defensive rebounds than its opponent in a given game is to win that game. He finds there is about a 75.7% likelihood that the winning team also had more defensive rebounds (23,993 wins vs. 7,693 losses).
@@ -65,4 +67,52 @@ e)	A graph showing the relationship between the two values returned, with a comp
 Question 7 – Test the hypothesis that in a given game the team that works together better as a team is more likely to win. Use the number of assists by a team in each game as a proxy for how good their teamwork is. To do so, adapt the query Karpov gives to compare defensive rebounds to winning percentage so that you are comparing the relationship between team assists (box > team > ast) and winning percentage. In addition to completing the answer template, describe how strongly you think your query results support (or disprove) this hypothesis.
 
 Question 8 – Determine whether the total number of personal fouls a team makes in a game (box > team > pf) has a larger affect on winning % than the number of turnovers a team makes in a game (box > team > tov). You may use two separate queries to retrieve the personal fouls and turnover data but for your analysis you should combine the results of those queries into a single table and a single graph that shows trendlines for both personal fouls and turnovers.
+
+-----------------------------
+
+Questions of Mongo Basic NBA:
+
+-----------------------------
+
+Question group #1 (answer any 3):
+
+Question 1 – How many games in the dataset did the Memphis Grizzlies play?
+
+Question 2 – How many games between January 1, 1990 and December 31, 1999 did the Miami Heat play against the Orlando Magic?  
+
+Question 3 – How many NBA games did the Phoenix Suns play between March 1, 1998 and February 5, 2004?
+
+Question 4 – Who played in more NBA games between July 1, 2004 and June 30, 2010: Tim Duncan or Shaquille O'Neal? (you may answer this with one query or use two separate queries and compare the answers by hand)
+
+
+Question group #2 (answer any 3):
+
+Question 5 – For each game that the Los Angeles Lakers played in 1996, list the following: 
+i. the two teams that played in the game (e.g. Los Angeles Lakers and Phoenix Suns)
+ii. The final score for the game
+
+Note: you only need to list the first 5 games in the text file you submit for this question, but the query you provide should provide a listing of all of the games that meet the search criteria.
+
+
+Question 6 – List all games played in 2002 in which the losing team scored less than 75 points. Your query should return the date of the game, the two teams that played, and the final score for each game that meets these criteria. 
+
+As with the previous question, you only need to show the output for first five games returned in your submitted text file, but the query itself should return all the games meeting the criteria.
+
+
+Question 7 – List all of the teams that the Boston Celtics played between July 1, 2008 and June 30, 2009 when the Celtics were the visiting team. That is, all of the teams that competed against the Celtics when the Celtics were not the home team. Each team that played Boston as the visiting team should be listed exactly once, and only teams that played Boston as the visitors should be listed. Note: the key “home” in each game is true if that team was the home team, false if it was the visitor.
+
+Question 8 – List all of the NBA teams that Shaquille O'Neal played for during his career. Your result should only list the names of each team he played for one time, and should not return any other fields. 
+
+Question 8a – List all of the NBA players that participated in a game with Shaquille O'Neal (Shaq) during the 2006-2007 season, either as a teammate or as a player on the opposing team. You may assume that all games in the 2006-2007 season were played between July 1, 2006 and June 30, 2007. Your result should only list the names of each player one time, and should not return any other fields. Your list may include Shaquille O’Neal. 
+
+The write-up you submit need only list the first five players returned by your query, but when the query is run against the NBA dataset it should return all of the players that meet this criteria. 
+
+
+Question group #3 (answer any 2):
+
+Question 9 – How many points did Tim Duncan score in 2006?
+
+Question 10 – Extend your answer for question 8 to list both the name of each NBA teams that Shaquille O'Neal played for during his career, and also the total number of games that he played for that team. Your result should only list the names of each team he played for one time, followed by the number of games that he played for that team. 
+
+Question 10a – Extend your answer for question 8 to list the name of each player that ever participated in an NBA game with Shaquille O'Neal as a teammate or on the opposing team, followed by the total number of games that each of those players participated in an NBA game with Shaq. Your result should only list the names of each player one time, followed by the number of games that he played with Shaq. It should be sorted and ordered to first show the player who played in the most games with Shaq, then the player who played in the 2nd most games, on down to the player who played with Shaq in the smallest number of games greater than 0.
 
