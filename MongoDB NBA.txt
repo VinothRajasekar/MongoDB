@@ -1,0 +1,409 @@
+Group #1
+---------
+A) Q1
+
+B) Added variable $box.team.fga to $unwind the document containing field goal assist for each team in the game.
+   Added {$match :{"stat" :{$ne : 0}}} to eliminate games from the results,because both the Winning team and Losing team had same number 
+   of field goal assist. Rest of the query stays pretty much same as original.
+
+C)
+There are totally 31686 nba games in the dataset. For this query,I'm not taking into consideration of 1325 games,
+because both the Winning team and Losing team had same number of field goal assist. That gives as 30361 games to analyze.
+The team with higher field goal assist won 13720 games. Calculating the result 13720/30361 gives 45.18%.
+The team that recodred higher fga has won 45.18% of the times.
+
+Winning Team Games : 13720
+Losing Team Games : 16641
+Result: : 13720/30361 = 45.18%
+
+D)
+db.games.aggregate([ 
+{$unwind : '$box'  }, 
+{$project : {_id : '$_id',       
+stat : {$cond : [        
+{ $gt : ['$box.won', 0] },        
+'$box.team.fga',         
+{ $multiply : ['$box.team.fga', -1] }]}}}, 
+{$group : { _id : '$_id', stat : { $sum : '$stat' }}},   
+{$match :{"stat" :{$ne : 0}}},
+{$project : {_id : '$_id',winningTeam : { $gte : ['$stat', 0] }}},
+{$group : {_id : '$winningTeam',count : { $sum : 1 }}}
+])
+
+E)
+
+{
+    "result" : [ 
+        {
+            "_id" : false,
+            "count" : 16641
+        }, 
+        {
+            "_id" : true,
+            "count" : 13720
+        }
+    ],
+    "ok" : 1
+}
+------------------------------------------------------------------------------------------------------------------------------------------------------
+A)Q2
+
+B)  Added variable $box.team.blk to $unwind the document containing blocks for each team in the game.This will help to calculate
+    the team with the number of blocked shots.Rest of the query stays pretty much same as original.
+
+C) The team with higher number of blocked shots won 7243 games between Jan1, 1990 and Dec 31, 1999.
+   Calculating the result 7243/10982 gives 66%.The team that recodred higher blocked shots has won 66% of the times.
+
+D)
+db.games.aggregate([ 
+{$match :{"date" : {$gte : ISODate("1990-01-01T00:00:00.000Z"),
+$lt : ISODate("2000-01-01T00:0:00.000Z")}}},
+{$unwind : '$box'  }, 
+{$project : {_id : '$_id',       
+stat : {$cond : [        
+{ $gt : ['$box.won', 0] },        
+'$box.team.blk',         
+{ $multiply : ['$box.team.blk', -1] }]}}}, 
+{$group : { _id : '$_id', stat : { $sum : '$stat' }}},   
+{$project : {_id : '$_id',winningTeamHigher : { $gte : ['$stat', 0] }}},
+{$group : {_id : '$winningTeamHigher',count : { $sum : 1 }}}]); 
+
+E)
+
+{
+    "result" : [ 
+        {
+            "_id" : false,
+            "count" : 3739
+        }, 
+        {
+            "_id" : true,
+            "count" : 7243
+        }
+    ],
+    "ok" : 1
+}
+------------------------------------------------------------------------------------------------------------------------------------------------------
+A)Q3
+
+B) Added variable $box.team.tov to $unwind the document containing turnover for each team in the game.
+   Added {$match :{"stat" :{$ne : 0}}} to eliminate games from the results,because both the Winning team and Losing team had same number 
+   of turnovers. Rest of the query stays pretty much same as original.
+
+C)There are two queries below. For Query 1 (1990's), there are totally 10982 nba games in the dataset between Jan 1, 1990 and Dec 31, 1999.
+  For some games both the Winning team and Losing team had same number of Turnovers. I haven't considered those games, which equals 895 games.
+  In 1990's, the team with fewer turovers won 41.3% (4166/10,083) of the times.   
+  
+  For Query 1 (2000's), there are totally 12261 nba games in the dataset between Jan 1, 2000 and Dec 31, 2009.
+  For some games both the Winning team and Losing team had same number of Turnovers. I haven't considered those games, which equals 984 games.
+  In 2000's, the team with fewer turovers won 41% (4625/11277) of the times. There is not much difference in stlye between 1990's and 2000's.
+  Teams having fewer turnovers won only 41% of the times.  
+
+
+D)
+db.games.aggregate([ 
+{$match :{"date" : {$gte : ISODate("1990-01-01T00:00:00.000Z"),
+$lt : ISODate("2000-01-01T00:0:00.000Z")}}},
+{$unwind : '$box'  }, 
+{$project : {_id : '$_id',       
+stat : {$cond : [        
+{ $gt : ['$box.won', 0] },        
+'$box.team.tov',         
+{ $multiply : ['$box.team.tov', -1] }]}}}, 
+{$group : { _id : '$_id', stat : { $sum : '$stat' }}},   
+{$match :{"stat" :{$ne : 0}}},
+{$project : {_id : '$_id',winningTeamHigher : { $gte : ['$stat', 0] }}},
+{$group : {_id : '$winningTeamHigher',count : { $sum : 1 }}}]); 
+
+
+
+db.games.aggregate([ 
+{$match :{"date" : {$gte : ISODate("2000-01-01T00:00:00.000Z"),
+$lt : ISODate("2010-01-01T00:0:00.000Z")}}},
+{$unwind : '$box'  }, 
+{$project : {_id : '$_id',       
+stat : {$cond : [        
+{ $gt : ['$box.won', 0] },        
+'$box.team.tov',         
+{ $multiply : ['$box.team.tov', -1] }]}}}, 
+{$group : { _id : '$_id', stat : { $sum : '$stat' }}},   
+{$match :{"stat" :{$ne : 0}}},
+{$project : {_id : '$_id',winningTeamHigher : { $gte : ['$stat', 0] }}},
+{$group : {_id : '$winningTeamHigher',count : { $sum : 1 }}}]);  
+
+
+E)
+
+{
+    "result" : [ 
+        {
+            "_id" : false,
+            "count" : 5921
+        }, 
+        {
+            "_id" : true,
+            "count" : 4166
+        }
+    ],
+    "ok" : 1
+}
+
+
+{
+    "result" : [ 
+        {
+            "_id" : false,
+            "count" : 6652
+        }, 
+        {
+            "_id" : true,
+            "count" : 4625
+        }
+    ],
+    "ok" : 1
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Group# 2
+--------
+
+A) Q4
+
+B)
+
+db.games.aggregate({
+$match :{"date" : {$gte : ISODate("2000-08-01T00:00:00.000Z"),
+$lt : ISODate("2005-08-01T00:0:00.000Z")}}},
+{$unwind: "$box"},
+{$unwind: "$box.players"},
+{$group :
+{"_id" : "$box.players.player", "Total Rebound" : {$sum: "$box.players.trb"}}},
+{$sort : {"Total Rebound" : -1}},
+{$limit:5})
+
+C)
+
+{
+    "result" : [ 
+        {
+            "_id" : "Kevin Garnett",
+            "Total Rebound" : 5251
+        }, 
+        {
+            "_id" : "Ben Wallace",
+            "Total Rebound" : 5126
+        }, 
+        {
+            "_id" : "Tim Duncan",
+            "Total Rebound" : 4673
+        }, 
+        {
+            "_id" : "Shawn Marion",
+            "Total Rebound" : 4077
+        }, 
+        {
+            "_id" : "Shaquille O'Neal",
+            "Total Rebound" : 3926
+        }
+    ],
+    "ok" : 1
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+A) Q5
+
+B)
+
+db.games.aggregate({
+$match :{"date" : {$gte : ISODate("2000-08-01T00:00:00.000Z"),
+$lt : ISODate("2005-08-01T00:0:00.000Z")}}},
+{$unwind :"$box"},
+{$unwind: "$teams"},
+{$match :{$or : [{$and : [{"box.won" : 0},{"teams.won": 0}]}, 
+{$and:[{"box.won" : 1},{"teams.won": 1}]}]}},
+{$group :
+{"_id" : "$teams.name", "Total Team Rebound" : {$sum: "$box.team.trb"}}},
+{$sort : {"Total Team Rebound" : -1}},
+{$limit:5})
+C)
+
+{
+    "result" : [ 
+        {
+            "_id" : "Golden State Warriors",
+            "Total Team Rebound" : 18427
+        }, 
+        {
+            "_id" : "Los Angeles Lakers",
+            "Total Team Rebound" : 18004
+        }, 
+        {
+            "_id" : "Sacramento Kings",
+            "Total Team Rebound" : 17916
+        }, 
+        {
+            "_id" : "Cleveland Cavaliers",
+            "Total Team Rebound" : 17772
+        }, 
+        {
+            "_id" : "San Antonio Spurs",
+            "Total Team Rebound" : 17757
+        }
+    ],
+    "ok" : 1
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+A) Q6
+
+B) 
+
+db.games.aggregate({
+$match :{"date" : {$gte : ISODate("2000-01-01T00:00:00.000Z"),
+$lt : ISODate("2010-01-01T00:0:00.000Z")}}},
+{$unwind: "$teams"},
+{$match :{"teams.name" : "Detroit Pistons" }}, 
+{$group :
+{"_id" : {"name" : "$teams.name", "year": {$year: '$date'}}, "Total Points" : {$sum: "$teams.score"}}},
+{$sort:{_id : 1}})
+
+C)
+
+{
+    "result" : [ 
+        {
+            "_id" : {
+                "name" : "Detroit Pistons",
+                "year" : 2000
+            },
+            "Total Points" : 8442
+        }, 
+        {
+            "_id" : {
+                "name" : "Detroit Pistons",
+                "year" : 2001
+            },
+            "Total Points" : 7510
+        }, 
+        {
+            "_id" : {
+                "name" : "Detroit Pistons",
+                "year" : 2002
+            },
+            "Total Points" : 7790
+        }, 
+        {
+            "_id" : {
+                "name" : "Detroit Pistons",
+                "year" : 2003
+            },
+            "Total Points" : 7636
+        }, 
+        {
+            "_id" : {
+                "name" : "Detroit Pistons",
+                "year" : 2004
+            },
+            "Total Points" : 7067
+        }, 
+        {
+            "_id" : {
+                "name" : "Detroit Pistons",
+                "year" : 2005
+            },
+            "Total Points" : 8646
+        }, 
+        {
+            "_id" : {
+                "name" : "Detroit Pistons",
+                "year" : 2006
+            },
+            "Total Points" : 7987
+        }, 
+        {
+            "_id" : {
+                "name" : "Detroit Pistons",
+                "year" : 2007
+            },
+            "Total Points" : 8139
+        }, 
+        {
+            "_id" : {
+                "name" : "Detroit Pistons",
+                "year" : 2008
+            },
+            "Total Points" : 7746
+        }, 
+        {
+            "_id" : {
+                "name" : "Detroit Pistons",
+                "year" : 2009
+            },
+            "Total Points" : 7805
+        }
+    ],
+    "ok" : 1
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Group #3
+--------
+
+A) Q7
+
+B) Added variable $box.team.ast to group the document by aggregation and find the winning average.
+Rest of the query stays pretty much same as original.
+
+C)
+db.games.aggregate([   
+{$unwind : '$box' },  
+{$group : {_id : '$box.team.ast',      
+winPercentage : { $avg : '$box.won' }}},  
+{$sort : { _id : 1 }   } ])
+
+D)
+
+For Data table, Please refer Q7-Assist.xlsx 
+
+E)
+
+For graph, Please refer Q7.twb (Sheet 1)
+
+From the graph I could see the win percentage is higly correlated with the Number of Assists.
+As the team makes more assist, the win percentage increases.
+------------------------------------------------------------------------------------------------------------------------------------------------------
+A) Q8
+
+B)  For Query 1 Added variable $box.team.tov to group the document by aggregation and find the winning average.
+Rest of the query stays pretty much same as original.
+
+For Query 2 Added variable $box.team.pf to group the document by aggregation and find the winning average.
+Rest of the query stays pretty much same as original.
+
+C)
+
+db.games.aggregate([   
+{$unwind : '$box' },  
+{$group : {_id : '$box.team.tov',      
+winPercentage : { $avg : '$box.won' }}},  
+{$sort : { _id : 1 }   } ])
+
+db.games.aggregate([   
+{$unwind : '$box' },  
+{$group : {_id : '$box.team.pf',      
+winPercentage : { $avg : '$box.won' }}},  
+{$sort : { _id : 1 }   } ])
+
+D)
+
+For Data Table, Please refer Q8 - TOV&PF.xlsx 
+
+
+E) For graph, Please refer Q8.twb (Sheet1 & Sheet2)
+
+From the graph I could see Turnover has larger impact on Winning % compared to the personal fouls.
+
+For example if the number of fouls by a team is 20 then the win % is 54. If the if the number of Turnover
+by a team is 20 then the win % is 49. This clearly showa the turnover has larger impact on the win percentage.
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
