@@ -1,0 +1,410 @@
+a) Question 1 
+
+b) 
+
+db.games.find({"teams.name" : "Memphis Grizzlies"}).count()
+
+c) The above query explains the number of games played by the Memphis Grizzlies in the dataset. 
+used count method against team name to find the total games played by emphis Grizzlies in the dataset.
+The answer turned out to be 977.
+
+d) 977
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+a ) Question 2
+
+b)
+
+db.games.find({$and : [{"teams.name" : "Miami Heat"}, 
+{"teams.name" : "Orlando Magic"}], 
+"date" : {$gte : ISODate("1990-01-01T00:00:00.000Z"),
+$lt : ISODate("2000-01-01T00:0:00.000Z")}}).count()
+
+c) The above query explains the games  played between Miami Heat and Orlando Magic between Jan 1, 1990 and Dec 31, 1999.
+Totally there were 38 games played between both the teams during this time period.
+
+d) 38
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+a) Question 3 
+
+b)
+
+db.games.find({"teams.name" : "Phoenix Suns", 
+"date" : {$gte : ISODate("1998-03-01T00:00:00.000Z"),
+$lt : ISODate("2004-02-06T00:0:00.000Z")}}).count()
+
+c) The above query explains the games played by Phoneix Suns between March 1, 1998 and Feb 5, 2004.
+Totally there were 455 games played by Phoneix Suns during this time period.
+
+d) 455
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+a) Question 5
+
+b)
+
+db.games.aggregate({
+$match :{"date" : {$gte : ISODate("1996-01-01T00:00:00.000Z"),
+$lt : ISODate("1997-01-01T00:0:00.000Z")}}},
+{$match :{"teams.name" : "Los Angeles Lakers"}}, 
+{$project :{"teams.score" : 1, "teams.name": 1, _id : 0}})
+
+c) The above query explains the each game played by LosAngeles Lakers in 1996.
+The results returned are final scores of two teams and the name of two teams that played the game.
+There were totally 82 games played by LosAngeles lakers in 1996.Only first five results are displayed below.
+
+
+d)
+{
+    "result" : [ 
+        {
+            "teams" : [ 
+                {
+                    "name" : "Philadelphia 76ers",
+                    "score" : 90
+                }, 
+                {
+                    "name" : "Los Angeles Lakers",
+                    "score" : 89
+                }
+            ]
+        }, 
+        {
+            "teams" : [ 
+                {
+                    "name" : "Los Angeles Lakers",
+                    "score" : 116
+                }, 
+                {
+                    "name" : "Utah Jazz",
+                    "score" : 100
+                }
+            ]
+        }, 
+        {
+            "teams" : [ 
+                {
+                    "name" : "Denver Nuggets",
+                    "score" : 96
+                }, 
+                {
+                    "name" : "Los Angeles Lakers",
+                    "score" : 93
+                }
+            ]
+        }, 
+        {
+            "teams" : [ 
+                {
+                    "name" : "Los Angeles Lakers",
+                    "score" : 106
+                }, 
+                {
+                    "name" : "Minnesota Timberwolves",
+                    "score" : 104
+                }
+            ]
+        }, 
+        {
+            "teams" : [ 
+                {
+                    "name" : "Los Angeles Lakers",
+                    "score" : 101
+                }, 
+                {
+                    "name" : "Houston Rockets",
+                    "score" : 100
+                }
+            ]
+        }
+    ],
+    "ok" : 1
+}
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+a)  Question 6
+
+b)
+
+db.games.aggregate({ 
+ $match:{
+"date" : {$gte : ISODate("2002-01-01T00:00:00.000Z"),
+$lt : ISODate("2003-01-01T00:0:00.000Z")}}},
+{$match : {"teams.1.score" : {$lt : 75}}},
+{$project: {"teams.name" : 1, "date": 1, _id : 0, 
+"teams.score" : 1}})
+
+c) The above query explains the games played in 2002 in which the losing team score less than 75 points.
+The answer below lists the date, two teams that played and final score. Totally the query returned 83 games.
+Only first five results are displayed below.
+
+ 
+
+d)
+
+{
+    "result" : [ 
+        {
+            "date" : ISODate("2002-01-02T05:00:00.000Z"),
+            "teams" : [ 
+                {
+                    "name" : "New Jersey Nets",
+                    "score" : 92
+                }, 
+                {
+                    "name" : "Memphis Grizzlies",
+                    "score" : 74
+                }
+            ]
+        }, 
+        {
+            "date" : ISODate("2002-01-04T05:00:00.000Z"),
+            "teams" : [ 
+                {
+                    "name" : "Miami Heat",
+                    "score" : 89
+                }, 
+                {
+                    "name" : "Boston Celtics",
+                    "score" : 66
+                }
+            ]
+        }, 
+        {
+            "date" : ISODate("2002-01-07T05:00:00.000Z"),
+            "teams" : [ 
+                {
+                    "name" : "Portland Trail Blazers",
+                    "score" : 98
+                }, 
+                {
+                    "name" : "Cleveland Cavaliers",
+                    "score" : 72
+                }
+            ]
+        }, 
+        {
+            "date" : ISODate("2002-01-09T05:00:00.000Z"),
+            "teams" : [ 
+                {
+                    "name" : "Toronto Raptors",
+                    "score" : 85
+                }, 
+                {
+                    "name" : "Chicago Bulls",
+                    "score" : 73
+                }
+            ]
+        }, 
+        {
+            "date" : ISODate("2002-01-12T05:00:00.000Z"),
+            "teams" : [ 
+                {
+                    "name" : "Phoenix Suns",
+                    "score" : 108
+                }, 
+                {
+                    "name" : "Miami Heat",
+                    "score" : 74
+                }
+            ]
+        }
+    ],
+    "ok" : 1
+}
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+a) Question 7
+
+b)
+
+db.games.aggregate({ 
+ $match:{
+"date" : {$gte : ISODate("2008-07-01T00:00:00.000Z"),
+$lt : ISODate("2009-07-01T00:0:00.000Z")}}},
+{$match : {$or : [{$and : [{"teams.0.name" : "Boston Celtics"},{"teams.0.home" : false}]},
+{$and : [{"teams.1.name" : "Boston Celtics"},{"teams.1.home" : false}]}]}},
+{$project: {"teams.name" : 1 , _id : 0}},
+{$unwind: "$teams"},
+{$match : {"teams.name" : {$ne : "Boston Celtics"}}},
+{$group:
+    {_id : "$teams.name"}},
+{$sort: {_id : 1 }})
+
+c) The above query explains list of teams visited Boston Celtics between July 1, 2008 to June 30 2009. Boston visited 29 teams during this time period. 
+
+d)
+
+{
+    "result" : [ 
+        {
+            "_id" : "Atlanta Hawks"
+        }, 
+        {
+            "_id" : "Charlotte Bobcats"
+        }, 
+        {
+            "_id" : "Chicago Bulls"
+        }, 
+        {
+            "_id" : "Cleveland Cavaliers"
+        }, 
+        {
+            "_id" : "Dallas Mavericks"
+        }, 
+        {
+            "_id" : "Denver Nuggets"
+        }, 
+        {
+            "_id" : "Detroit Pistons"
+        }, 
+        {
+            "_id" : "Golden State Warriors"
+        }, 
+        {
+            "_id" : "Houston Rockets"
+        }, 
+        {
+            "_id" : "Indiana Pacers"
+        }, 
+        {
+            "_id" : "Los Angeles Clippers"
+        }, 
+        {
+            "_id" : "Los Angeles Lakers"
+        }, 
+        {
+            "_id" : "Memphis Grizzlies"
+        }, 
+        {
+            "_id" : "Miami Heat"
+        }, 
+        {
+            "_id" : "Milwaukee Bucks"
+        }, 
+        {
+            "_id" : "Minnesota Timberwolves"
+        }, 
+        {
+            "_id" : "New Jersey Nets"
+        }, 
+        {
+            "_id" : "New Orleans Hornets"
+        }, 
+        {
+            "_id" : "New York Knicks"
+        }, 
+        {
+            "_id" : "Oklahoma City Thunder"
+        }, 
+        {
+            "_id" : "Orlando Magic"
+        }, 
+        {
+            "_id" : "Philadelphia 76ers"
+        }, 
+        {
+            "_id" : "Phoenix Suns"
+        }, 
+        {
+            "_id" : "Portland Trail Blazers"
+        }, 
+        {
+            "_id" : "Sacramento Kings"
+        }, 
+        {
+            "_id" : "San Antonio Spurs"
+        }, 
+        {
+            "_id" : "Toronto Raptors"
+        }, 
+        {
+            "_id" : "Utah Jazz"
+        }, 
+        {
+            "_id" : "Washington Wizards"
+        }
+    ],
+    "ok" : 1
+}
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+a)  Question 9
+
+b)
+
+db.games.aggregate(
+  {
+    $match : {
+      date : {
+        $gte : ISODate("2006-01-01T00:00:00Z"),
+        $lt : ISODate("2007-01-01T00:00:00Z")
+      }
+    }
+  },
+{$unwind: "$box"},
+{$unwind: "$box.players"},
+{$match: {"box.players.player" : "Tim Duncan"}},
+{$group :
+{_id : "$box.players.player",
+"Total Points Scored in 2006" : {$sum: "$box.players.pts" }}})
+
+c) The above query returns the total points scored by Tim Duncan during 2006. He scored 1470 points for the year 2006.
+
+
+d)
+
+{
+    "result" : [ 
+        {
+            "_id" : "Tim Duncan",
+            "Total Points Scored in 2006" : 1470
+        }
+    ],
+    "ok" : 1
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+a) Question 11
+
+b)
+
+db.games.aggregate(
+  {
+    $match : {
+      date : {
+        $gte : ISODate("2000-07-01T00:00:00Z"),
+        $lt : ISODate("2009-07-01T00:00:00Z")
+      }
+    }
+  },
+  {$unwind: "$teams"},
+  {$match : {"teams.home" : true}},
+  {$group :
+{"_id" : "date", "Total Games" : {$sum: 1}, "Games Won" : {$sum : "$teams.won"}}},
+{$project : {_id :0,  "Home Team Lose %" : { $multiply: [{$subtract: [ 1, {$divide : ["$Games Won", "$Total Games"]}]},100]}}})
+
+
+c) The above query explains the percentage of games lost by the home teams between July 1, 2000 and June 30,2009.
+The home team lost by 39.60620633336358 percentage during this period.
+
+
+
+d)
+
+{
+    "result" : [ 
+        {
+            "Home Team Lose %" : 39.60620633336358
+        }
+    ],
+    "ok" : 1
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
