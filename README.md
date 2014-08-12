@@ -70,7 +70,7 @@ Question 8 – Determine whether the total number of personal fouls a team makes
 
 -----------------------------
 
-Questions of Mongo Basic NBA:
+Questions of MongoDB Basic NBA:
 
 -----------------------------
 
